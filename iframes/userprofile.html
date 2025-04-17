@@ -1,0 +1,147 @@
+
+      <div id="popup" class="popup-form " style="height: 65%;width: 90%;overflow: scroll;scrollbar-color: rgb(94, 183, 34) transparent;">
+          <div style="display: flex;align-items: center;justify-content: center;gap: 15px;">
+              <div><center><h2>Edit Profile ↓</h2></center></div>
+              <div><button onclick="closePopup()" style="background-color: rgba(0, 0, 0, 0);font-size: 25px;margin-left: 50px;">X</button></div>
+          </div>
+       <div style="display: flex;align-items: center;justify-content: center;">
+          <label for="" style="border-radius: 2px;background-color: rgba(0, 0, 0, 0.536);font-size: 20px;"> Profile </label>
+          <input type="file" id="profile-photo" accept="image/*">
+       </div>
+          <input type="text" id="name" placeholder="Enter your name">
+          <input type="number" id="env-no" placeholder="Enter environment number">
+          <div style="display: flex;align-items: center;justify-content: center;">
+              <label for="" style="border-radius: 2px;background-color: rgba(0, 0, 0, 0.536);font-size: 20px;"> Background </label>
+          <input type="file" id="bg-photo" accept="image/*">
+          </div>
+          <button onclick="saveProfile()">Save</button>
+          <button onclick="deleteProfile()">Delete</button>
+      </div>
+  
+      <div class="profile-container" id="profile-container" style="display: flex;align-items: center;justify-content: left;gap: 20px;">
+          <div style="display: flex;align-items: center;justify-content: left;">
+              <img id="display-photo" class="profile-photo" src="" alt="Profile Photo" style="border: solid 1px green;border-radius: 100%;height: 95px;width: 95px;">   
+              <button onclick="openPopup()" style="border-radius: 100%;background-color: rgb(255, 255, 255);border: none;margin-top: -50px;width: 25px;">  
+                  <img src="profile.png" alt="" style="width: 15px;border-radius: 100%;border: solid rgba(255, 255, 255, 0) 1px;">
+              </button>
+          </div>
+        <div>
+            <p style="border-radius: 8px;background-color: rgba(191, 191, 191, 0.536);width: 100%;height: 23px;"><strong></strong> <span id="display-name">-</span></p>
+            <p style="border-radius: 8px;background-color: rgba(191, 191, 191, 0.536);width: 100%;height: 23px;"><strong></strong> <span id="display-env-no">-</span></p>
+      
+        </div>  </div>
+      <style>
+        .profile-btn {
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.568);
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .popup-form input {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+        }
+        .popup-form button {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .profile-container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #19b1a7;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+        .profile-photo {
+            max-width: 100px;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+      <script>
+          function openPopup() {
+              document.getElementById('popup').style.display = 'block';
+              loadProfile();
+          }
+  
+          function closePopup() {
+              document.getElementById('popup').style.display = 'none';
+          }
+  
+          function saveProfile() {
+              const name = document.getElementById('name').value;
+              const envNo = document.getElementById('env-no').value;
+              const photoInput = document.getElementById('profile-photo');
+              const bgInput = document.getElementById('bg-photo');
+  
+              if (photoInput.files.length > 0) {
+                  const reader = new FileReader();
+                  reader.onload = function(event) {
+                      localStorage.setItem('profilePhoto', event.target.result);
+                      updateUI();
+                  };
+                  reader.readAsDataURL(photoInput.files[0]);
+              }
+  
+              if (bgInput.files.length > 0) {
+                  const reader = new FileReader();
+                  reader.onload = function(event) {
+                      localStorage.setItem('profileBg', event.target.result);
+                      updateUI();
+                  };
+                  reader.readAsDataURL(bgInput.files[0]);
+              }
+  
+              localStorage.setItem('profileName', name);
+              localStorage.setItem('profileEnvNo', envNo);
+              updateUI();
+              closePopup();
+          }
+  
+          function loadProfile() {
+              document.getElementById('name').value = localStorage.getItem('profileName') || '';
+              document.getElementById('env-no').value = localStorage.getItem('profileEnvNo') || '';
+          }
+  
+          function updateUI() {
+              document.getElementById('display-name').textContent = localStorage.getItem('profileName') || '-';
+              document.getElementById('display-env-no').textContent = localStorage.getItem('profileEnvNo') || '-';
+              const savedPhoto = localStorage.getItem('profilePhoto');
+              const savedBg = localStorage.getItem('profileBg');
+              if (savedPhoto) {
+                  document.getElementById('display-photo').src = savedPhoto;
+              } else {
+                  document.getElementById('display-photo').src = '';
+              }
+              if (savedBg) {
+                  document.getElementById('profile-container').style.backgroundImage = `url(${savedBg})`;
+              }
+          }
+  
+          function deleteProfile() {
+              localStorage.removeItem('profileName');
+              localStorage.removeItem('profileEnvNo');
+              localStorage.removeItem('profilePhoto');
+              localStorage.removeItem('profileBg');
+              updateUI();
+              alert('Profile deleted successfully!');
+          }
+  
+          updateUI();
+      </script>

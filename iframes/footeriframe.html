@@ -1,0 +1,751 @@
+<section class="phone">
+	<input type="checkbox" id="navigation" />
+	
+	<div class="shadow"></div>
+	<div class="frame">
+	  <div class="screen">
+		<div class="building-shadow building-shadow-1"></div>
+		<div class="building building-1"></div>
+		<div class="building-shadow building-shadow-2"></div>
+		<div class="building building-2">
+		  <div class="side"></div>
+		  <div class="side"></div>
+		  <div class="side"></div>
+		  <div class="antenna"></div>
+		</div>
+		<div class="building-shadow building-shadow-3"></div>
+		<div class="building building-3">
+		  <div class="side"></div>
+		</div>
+		<div class="trees">
+		  <div class="tree tree-1"></div>
+		  <div class="tree tree-2"></div>
+		  <div class="tree tree-3"></div>
+		  <div class="tree tree-4"></div>
+		  <div class="tree tree-5"></div>
+		  <div class="tree tree-6"></div>
+		  <div class="tree tree-7"></div>
+		</div>
+		<div class="dots">
+		  <div class="dot" style="--pos: 0;"></div>
+		  <div class="dot" style="--pos: 1;"></div>
+		  <div class="dot" style="--pos: 2;"></div>
+		  <div class="dot" style="--pos: 3;"></div>
+		  <div class="dot" style="--pos: 4;"></div>
+		  <div class="dot" style="--pos: 5;"></div>
+		  <div class="dot" style="--pos: 6;"></div>
+		  <div class="dot" style="--pos: 7;"></div>
+		  <div class="dot" style="--pos: 8;"></div>
+		  <div class="dot" style="--pos: 9;"></div>
+		  <div class="dot" style="--pos: 10;"></div>
+		  <div class="dot" style="--pos: 11;"></div>
+		  <div class="dot" style="--pos: 12;"></div>
+		  <div class="dot" style="--pos: 13;"></div>
+		  <div class="dot" style="--pos: 14;"></div>
+		  <div class="dot" style="--pos: 15;"></div>
+		  <div class="dot" style="--pos: 16;"></div>
+		  <div class="dot" style="--pos: 17;"></div>
+		  <div class="dot" style="--pos: 18;"></div>
+		</div>
+		<div class="marker-container">
+		  <div class="marker"></div>
+		</div>
+		<label class="start-button" for="navigation">Start</label>
+		<label class="close-button" for="navigation">Stop</label>
+	  </div>
+	  <label class="main-button" for="navigation">Main</label>
+	</div>
+	<div class="side-bottom">
+	  <div class="charger"></div>
+	</div>
+	<div class="side-side"></div>
+  </section>
+  <style>
+	/* 
+Inspired by Mobile navigation system, by Dzianis Rakhuba
+https://dribbble.com/shots/6793976-Mobile-navigation-system 
+*/
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  perspective: 200vmin;
+  background: #00000000;
+}
+
+@keyframes blink {
+  0%, 6%, 100% { background-color: var(--c4); }
+  1%, 5% { background-color: var(--c3); }
+}
+
+@keyframes bounceMarker {
+  0%, 100% { transform: translateZ(0); }
+  50% { transform: translateZ(0.5em); }
+}
+
+@keyframes light {
+  25% { box-shadow: 0 0 2em 1em var(--c3); }
+  0%, 50%, 100% { box-shadow: 0 0 0 0 var(--c3); }
+}
+
+.phone {
+  --c0: #141643;
+  --c1: #484cef;
+  --c2: #fffcdd;
+  --c3: #f80;
+  --c4: #ffea3b;
+  --c5: #00a3f9;
+  --t: 1s;
+  font-size: 1vmin;10px;
+  width: 30em;
+  aspect-ratio: 67 / 138;
+  color: var(--c0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate3d(0, 0, 0, 90deg) rotate(0deg);
+  transform-style: preserve-3d;
+  transition: transform var(--t);
+  atransform: translate(-50%, -50%) rotate3d(1, 0.65, -1, 90deg) rotate(30deg);
+  pointer-events: none;
+
+  &:has(input:checked) {
+    transform: translate(-50%, -50%) rotate3d(0.7, 0.5, -1, 90deg) rotate(30deg);
+    .shadow {
+      transform: translate3d(-5em, 1em, -4em) scale(1.025);
+      width: calc(100% + 4em);
+    }
+    .frame {
+      box-shadow: -0.25em 0.25em var(--c1);
+
+      &::before {
+        border-radius: 4em 2em 2em 2em;
+      }
+
+      .main-button {
+        box-shadow:  -0.25em 0.25em 0 0 var(--c1);
+        background-position: 0em 0;
+      }
+      .screen {
+        box-shadow: inset -0.5em 0.5em var(--c1);
+
+        .building {
+          box-shadow: 
+            inset 0 0 0 0.5em var(--c2),
+            inset -0.8em 0 var(--c0),
+            inset 0 0.8em var(--c1);
+          transform: translate(-50%, -50%) translateZ(var(--d));
+          transition-delay: var(--s);
+
+          .side {
+            transform: translate(-50%, -50%) translateZ(var(--dt)) scale(1.2);
+            transition-delay: calc(var(--s) + 0.5s);
+          }
+
+          .antenna {
+            transform: translate(-50%, -50%) translateZ(3.75em);
+            transition-delay: calc(var(--s) + 2s);
+          }
+        }
+
+        .building-shadow {
+          transform: translate(-50%, -50%) scale(1.7, 1.4);
+          transition-delay: var(--s);
+          transform-origin: 100% 50%;
+
+          &.building-shadow-3 {
+            transform: translate(-50%, -50%) scale(1.6, 1.6);
+          }
+        }
+
+        .marker-container {
+          animation: bounceMarker 2s infinite;
+          animation-delay: calc(var(--t) * 2);
+
+          .marker {
+            transform: rotate(45deg) rotate3d(-1, 1, 0, 90deg);
+            transition-delay: var(--t);
+            transition-timing-function: cubic-bezier(0.75, 0, 0.5, 1.5);
+            box-shadow: -0.45em 0.1em var(--c4);
+          }
+        }
+
+        .start-button {
+          opacity: 0;
+          transition-delay: 0s;
+          pointer-events: none;
+        }
+
+        .close-button {
+          opacity: 1;
+          transition-delay: calc(var(--t) / 2);
+          pointer-events: auto;
+        }
+
+        .trees {
+          .tree {
+            box-shadow: -0.5em 0 var(--c0);
+            transition-delay: calc(var(--t) * 8);
+            
+            &::before, &::after {
+              transform:translate(-50%, -50%) translateZ(var(--d));
+              transition-delay: calc(var(--t) * 8);
+            }
+          }
+        }
+        .dots {
+          .dot {
+            animation-name: blink;
+
+            &::before, &::after {
+              transition-duration: var(--t);
+              transition-delay: calc(var(--t) * 2.25);
+            }
+            &::before { transform: translateZ(0.15em); }
+            &::after { transform: translateZ(0.30em); }
+          }
+        }
+      }
+    }
+  }
+
+  & * {
+    &, &::before, &::after {
+      position: absolute;
+      box-sizing: border-box;
+      transform-style: preserve-3d;
+    }
+  }
+
+  & input {
+    width: 1px;
+    height: 1px;
+    overflow: clip;
+    clip-path: polygon(0 0, 1px 1px);
+  }
+
+  .shadow {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(farthest-side circle, var(--c0) 50%, #0000 0) 50% 50% / 0.5em 0.5em;
+    border-radius: 4em;
+    -webkit-mask: linear-gradient(90deg, #0000, #000 5em);
+    transform: translate3d(0, 0, -4em) scale(1);
+    transition: transform var(--t), width var(--t);
+  }
+
+  .frame {
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 50% 5%, var(--c1) 0.5em, #0000 0.6em),
+      var(--c0);
+    border-radius: 3em;
+    transition: box-shadow var(--t);
+    box-shadow: 0 0 var(--c1);
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      transform: translateZ(-4em);
+      background: var(--c0);
+      border-radius: 4em 2em 2em 3em;
+      transition: border-radius var(--t);
+    }
+
+    .screen {
+      aspect-ratio: 75 / 133;
+      width: 90%;
+      background: red;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 0 var(--c1);
+      transition: box-shadow var(--t);
+      background:
+        linear-gradient(var(--c1) 0 0) 9.5% 6% / 30% 27%,
+        linear-gradient(var(--c5) 0 0) 90% 6% / 35% 27%,
+        linear-gradient(var(--c1) 0 0) 9.5% 50% / 30% 14%,
+        linear-gradient(var(--c1) 0 0) 90% 50% / 35% 14%,
+        linear-gradient(var(--c1) 0 0) 5% 94.5% / 8% 27%,
+        linear-gradient(var(--c1) 0 0) 33.5% 94.5% / 8% 27%,
+        linear-gradient(var(--c1) 0 0) 90% 94.5% / 35% 27%,
+        linear-gradient(#0000 35%, var(--c0) 0 40%, #0000 0 60%, var(--c0) 0 65%, #0000 0),
+        linear-gradient(90deg, #0000 43%, var(--c0) 0 52%, #0000 0),
+        linear-gradient(90deg, #0000 17.5%, var(--c0) 0 26.5%, #0000 0) 0 100% / 100% 40%,
+        var(--c2);
+      background-repeat: no-repeat;
+
+      .marker-container {
+        width: 100%;
+        height: 100%;
+
+        .marker {
+          width: 5em;
+          height: 5em;
+          background: radial-gradient(farthest-side circle, var(--c4) 35%, var(--c3) 0);
+          border-radius: 100% 100% 0 100%;
+          transform-origin: 100% 100%;
+          transform: rotate(45deg) rotate3d(0, 0, 0, 0deg);
+          top: 27%;
+          left: 60%;
+          transition: transform, box-shadow;
+          transition-duration: var(--t);
+          transition-delay: 0s;
+          box-shadow: 0 0 var(--c4)
+        }
+      }
+
+      .start-button {
+        width: 90%;
+        background: #293;
+        color: #fff;
+        padding: 1em;
+        text-align: center;
+        font-size: 1.5em;
+        border-radius: 1.5em;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, -25%);
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        transition: opacity calc(var(--t) / 4);
+        transition-delay: calc(var(--t) / 2);
+        pointer-events: auto;
+      }
+
+      .close-button {
+        width: 4.5em;
+        height: 4.5em;
+        background: 
+          linear-gradient(#fff 0 0) 50% 50% / 2em 0.25em,
+          linear-gradient(#fff 0 0) 50% 50% / 0.25em 2em,
+          #0008;
+        color: #fff;
+        text-align: center;
+        border-radius: 50%;
+        right: 0;
+        bottom: 0;
+        transform: translate(-25%, -25%) rotate(45deg);
+        background-repeat: no-repeat;
+        text-indent: -100in;
+        overflow: clip;
+        opacity: 0;
+        transition: opacity calc(var(--t) / 4);
+        transition-delay: 0s;
+        pointer-events: none;
+      }
+
+      .building, .building-shadow {
+        width: var(--w);
+        height: var(--h);
+        background: var(--c2);
+        box-shadow: 
+          inset 0 0 0 0.5em var(--c2),
+          inset 0 0 var(--c0),
+          inset 0 0 var(--c1);
+        transform: translate(-50%, -50%) translateZ(0);
+        transition: box-shadow, transform;
+        transition-duration: var(--t);
+
+        &.building-shadow {
+          box-shadow: none;
+          background: var(--c0);
+          transform-origin: 95% 50%;
+          transform: translate(-50%, -50%) scale(0.6);
+
+          &::before, &::after { content: none !important; }
+        }
+
+        .side {
+          width: 100%;
+          height: 100%;
+          top: 50%;
+          left: 50%;
+          background: var(--c2);
+          transition: transform var(--t);
+          transition-delay: 0s;
+          transition-timing-function: cubic-bezier(0.75, 0, 0.5, 1.5);
+        }
+
+        &::before,
+        & .side::before {
+          content: "";
+          width: var(--w);
+          height: var(--d);
+          top: 100%;
+          transform-origin: 50% 0%;
+          transform: rotateX(-90deg);
+          background-repeat: no-repeat;
+        }
+
+        &::after,
+        & .side::after {
+          content: "";
+          height: var(--h);
+          width: var(--d);
+          transform-origin: 0 50%;
+          transform: rotateY(90deg);
+          background-repeat: no-repeat;
+        }
+
+        &.building-1, &.building-shadow-1 {
+          --w: 3.5em;
+          --h: 3.5em;
+          --d: 10em;
+          --s: calc(var(--t) * 3);
+          top: 81%;
+          left: 80%;
+          transition-delay: 0s;
+
+          &::before {
+            background: 
+              linear-gradient(var(--c0) 0 0) 0 0 / 100% 0.5em no-repeat,
+              linear-gradient(var(--c1) 0 0) 0 9em / 100% 1em no-repeat,
+              repeating-linear-gradient(var(--c0) 0 0.25em, var(--c1) 0 1.35em);
+          }
+
+          &::after {
+            background: 
+              linear-gradient(var(--c0) 0 0) 0 0 / 0.5em 100% no-repeat,
+              linear-gradient(var(--c0) 0 0) 8.3em 50% / 2em 40% no-repeat,
+              linear-gradient(var(--c1) 0 0) 8.3em 50% / 2em 50% no-repeat,
+              linear-gradient(var(--c1) 0 0) 9.75em 50% / 0.5em 100% no-repeat,
+              linear-gradient(var(--c0) 0 0) 9em 0 / 1em 100% no-repeat,
+              repeating-linear-gradient(90deg, var(--c1) 0 0.25em, var(--c0) 0 1.35em);
+          }
+        }
+
+        &.building-2, &.building-shadow-2 {
+          --w: 5em;
+          --h: 5em;
+          --d: 13em;
+          --s: calc(var(--t) * 5.75);
+          top: 17%;
+          left: 82%;
+          transition-delay: 0s;
+
+          &::before {
+            background: 
+              linear-gradient(var(--c5) 0 0) 0 12.75em / 100% 0.5em no-repeat,
+              repeating-linear-gradient(90deg, #0000 0 10%, var(--c2) 0 45%) 0 10em / 100% 3em no-repeat,
+              var(--c5);
+          }
+
+          &::after {
+            background: 
+              linear-gradient(var(--c0) 0 0) 12.75em 0  /  0.5em 100% no-repeat,
+              repeating-linear-gradient(#0000 0 10%,  var(--c2) 0 45%)  10em 0 / 3em 100% no-repeat,
+              var(--c0)
+          }
+
+          .antenna {
+            --w: 0.35em;
+            --h: 0.35em;
+            --d: 5em;
+            left: 42.5%;
+            top: 57.5%;
+            transform: translate(-50%, -50%) translateZ(-0.5em);
+            width: var(--w);
+            height: var(--h);
+            background: var(--c3);
+            box-shadow: 0 0 0em 0em var(--c3);
+            animation: light 3s infinite;
+            animation-delay: calc(var(--s) + 2s);
+            transition: transform var(--t);
+            transition-delay: 0s;
+
+            &::before {
+              content: "";
+              width: var(--w);
+              height: var(--d);
+              top: 100%;
+              transform-origin: 50% 0%;
+              transform: rotateX(-90deg);
+              background: var(--c5);
+
+            }
+
+            &::after{
+              content: "";
+              height: var(--h);
+              width: var(--d);
+              transform-origin: 0 50%;
+              transform: rotateY(90deg);
+              background: var(--c0);
+            }
+          }
+
+          .side {
+            --w: 5em;
+            --h: 5em;
+            --d: 2.5em;
+            transform: translate(-50%, -50%) translateZ(var(--dt)) scale(0);
+
+            &::before {
+              background:
+                repeating-linear-gradient(var(--c5) 0 10%, #0000 0 45%),
+                repeating-linear-gradient(90deg, var(--c5) 0 10%, #0000 0 45%)
+                var(--c2)
+                ;
+            }
+
+            &::after {
+              background:
+                repeating-linear-gradient(var(--c0) 0 10%, #0000 0 45%),
+                repeating-linear-gradient(90deg, var(--c0) 0 10%, #0000 0 45%)
+                var(--c2)
+            }
+
+            &:nth-child(1) { --dt: -1em; }
+            &:nth-child(2) { --dt: -4.5em; }
+            &:nth-child(3) { --dt: -8em; }
+          }
+        }
+
+        &.building-3, &.building-shadow-3 {
+          --w: 4.5em;
+          --h: 3.3em;
+          --d: 10em;
+          --s: calc(var(--t) * 4);
+          top: 15%;
+          left: 26%;
+          transition-delay: 0s;
+
+          &::before {
+            background: 
+
+              repeating-linear-gradient(var(--c0) 0 2%, #0000 0 12.5%),
+              linear-gradient(var(--c0) 0 0) 50% 100% / 20% 87.5% no-repeat,
+              var(--c1);
+          }
+
+          &::after {
+            background: 
+              repeating-linear-gradient(90deg, var(--c1) 0 2%, var(--c0) 0 12.5%),
+              var(--c0)
+          }
+
+          .side {
+            --d: 8em;
+            --dt: -5em;
+            transform: translate(-50%, -50%) translateZ(var(--dt)) scale(0);
+
+            &::before {
+              background: 
+                repeating-linear-gradient(var(--c0) 0 3%, #0000 0 15%),
+                linear-gradient(var(--c1) 0 0) 50% 0% / 1em 3.5em no-repeat,
+                linear-gradient(var(--c0) 0 0) 50% 100% / 1.5em 8em no-repeat,
+
+                var(--c1);
+            }
+
+            &::after {
+              background: 
+                repeating-linear-gradient(90deg, var(--c1) 0 3%, var(--c0) 0 15%),
+                var(--c0)
+            }
+          }
+        }
+      }
+
+      .trees {
+        width: 100%;
+        height: 100%;
+
+        .tree {
+          --w: 1.5em;
+          width: var(--w);
+          height: var(--w);
+          background: var(--c2);
+          border-radius: 50%;
+          box-shadow: 0 0 var(--c0);
+          transition: box-shadow var(--t);
+          
+          &::before,
+          &::after {
+            content:"";
+            --d: 0.5em;
+            top: 50%;
+            left: 50%;
+            width: 75%;
+            height: 75%;
+            background: var(--c2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            transition: transform var(--t);
+            transition-delay: 0s;
+            transition-timing-function: cubic-bezier(0.75, 0, 0.5, 1.5);
+          }
+          
+          &::after {
+            --d: 0.85em;
+            width: 50%;
+            height: 50%;
+          }
+
+          &.tree-1 { top: 48.5%; left: 10%; }
+          &.tree-2 { top: 48.5%; left: 19%; }
+          &.tree-3 { top: 48.5%; left: 28%; }
+          &.tree-4 { top: 44.5%; left: 62%; }
+          &.tree-5 { top: 44.5%; left: 85%; }
+          &.tree-6 { top: 52.5%; left: 62%; }
+          &.tree-7 { top: 52.5%; left: 85%; }
+        }
+      }
+
+      .dots {
+        width: 100%;
+        height: 100%;
+
+        .dot {
+          --td: 9s;
+          width: 0.75em;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          background-image: linear-gradient(90deg, #0005, #0000);
+          background-color: var(--c4);
+          transform: translate(-50%, -50%);
+          animation-duration: var(--td);
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          animation-delay: calc(var(--t) * 10 + var(--td) * var(--pos) / 19);
+
+          &::before,
+          &::after {
+            content: "";
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-image: inherit;
+            background-color: inherit;
+            transform: translateZ(0em);
+            transition: transform, opacity;
+            transition-duration: calc(var(--t) / 3);
+            transition-delay: 0s;
+          }
+
+          &::after {
+            background-image: none;
+            afilter: brightness(0.8);
+            opacity: 1;
+          }
+
+          &:nth-child(1)  { left: 22.0%; top: 97.5%; }
+          &:nth-child(2)  { left: 22.0%; top: 92.5%; }
+          &:nth-child(3)  { left: 22.0%; top: 87.5%; }
+          &:nth-child(4)  { left: 22.0%; top: 82.5%; }
+          &:nth-child(5)  { left: 22.0%; top: 77.5%; }
+          &:nth-child(6)  { left: 22.0%; top: 72.5%; }
+          &:nth-child(7)  { left: 22.0%; top: 67.5%; }
+          &:nth-child(8)  { left: 22.0%; top: 62.5%; }
+          &:nth-child(9)  { left: 30.5%; top: 62.5%; }
+          &:nth-child(10) { left: 39.5%; top: 62.5%; }
+          &:nth-child(11) { left: 47.5%; top: 62.5%; }
+          &:nth-child(12) { left: 47.5%; top: 57.5%; }
+          &:nth-child(13) { left: 47.5%; top: 52.5%; }
+          &:nth-child(14) { left: 47.5%; top: 47.5%; }
+          &:nth-child(15) { left: 47.5%; top: 42.5%; }
+          &:nth-child(16) { left: 47.5%; top: 37.5%; }
+          &:nth-child(17) { left: 56.0%; top: 37.5%; }
+          &:nth-child(18) { left: 64.5%; top: 37.5%; }
+          &:nth-child(19) { left: 73.0%; top: 37.5%; }
+        }
+      }
+    }
+
+    .main-button {
+      width: 5em;
+      height: 2em;
+      border-radius: 0.5em;
+      left: 50%;
+      bottom: 1.5em;
+      transform: translate(-50%, -50%);
+      box-shadow:  0em 0 0 0em var(--c1);
+      transition: box-shadow var(--t), background-position var(--t);
+      pointer-events: auto;
+      text-indent: -9in;
+      overflow: clip;
+      background:
+        linear-gradient(125deg, #0000 15%, var(--c1) 0 25%, #0000 0 30%, var(--c1) 0 35%, #0000 0) 5em 0 / 200% 100%;
+
+    }
+  }
+
+  .side-bottom {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 4em;
+    background: var(--c1);
+    border-radius: 1.75em;
+    transform-origin: 50% 0;
+    transform: rotateX(-90deg);
+
+    &::before,
+    &::after {
+      content: "";
+      width: 4.8em;
+      height: 1.6em;
+      top: 50%;
+      left: 25%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(farthest-side circle, var(--c0) 50%, #0000 55%) 0 0 / 0.8em 0.8em,
+        radial-gradient(farthest-side circle, var(--c2) 50%, #0000 55%) 0.075em 0.075em / 0.8em 0.8em
+    }
+
+    &::after {
+      left: 75%;
+    }
+
+    .charger {
+      content: "";
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+      width: 12.5%;
+      height: 22.5%;
+      border-radius: 50em;
+      background: var(--c0);
+      box-shadow: inset -0.125em -0.125em var(--c2);
+    }
+  }
+
+  .side-side {
+    position: absolute;
+    top: 2em;
+    left: 0;
+    width: 4em;
+    height: calc(100% - 4em);
+    background: 
+      linear-gradient(var(--c1) 0 0) 0 12% / 100% 2.5%,
+      linear-gradient(var(--c1) 0 0) 0 85% / 100% 2.5%,
+      var(--c0);
+    background-repeat: no-repeat;
+    transform-origin: 0% 50%;
+    transform: rotateY(90deg);
+    border-radius: 1em 1em 2em 3em;
+
+    &::before, 
+    &::after {
+      content: "";
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 22.5%;
+      width: 25%;
+      height: 10%;
+      border-radius: 50em;
+      box-shadow: -0.25em 0.25em var(--c1);
+    }
+
+    &::after {
+      top: 35%;
+    }
+  }
+}
+  </style>

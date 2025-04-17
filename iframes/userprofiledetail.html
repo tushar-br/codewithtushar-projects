@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pop-up Form with Save to Gallery</title>
+  <style>
+    /* Your existing styles */
+  </style>
+</head>
+<body>
+  <div class="form-popup" id="formPopup">
+    <h2>Enter Your Details</h2>
+    <img id="previewPhoto" alt="Image Preview">
+    <input type="text" id="userName" placeholder="Enter your name" required>
+    <input type="text" id="envNo" placeholder="Enter Environment No" required>
+<div style="height: 18px;">
+    <h6>Compulsoryone time Sellect Profile picture </h6>
+</div>
+    <input type="file" id="profilePhoto" accept="image/*" onchange="previewImage(event)">
+    <button onclick="saveUserData()">Save</button>
+  </div>
+
+  <div class="user-data" id="userData" style="display: none;width: 95%;background-color: rgba(0, 0, 0, 0);">
+ <div style="display: flex;align-items: center;justify-content: center;gap: 15px;">
+    <div> <img id="displayPhoto" alt="Profile Photo" style="border: solid 1px blue;border-radius: 50px;width: 80px;height: 80px;"></div>
+    <div>
+      <div> <h2 id="displayName"></h2></div>
+      <div> <p id="displayEnvNo"></p></div>
+    </div>
+ </div>
+    <div id="buttons" style="margin-top: 90px;">
+      <button onclick="editUserData()">Edit</button>
+      <button onclick="saveProfileScreenshot()">Save to Gallery</button>
+      <button class="delete-button" onclick="openDeleteConfirmation()">Delete</button>
+    </div>
+  </div>
+
+  <div id="successMessage">Saved successfully!</div>
+
+  <!-- Delete confirmation popup -->
+  <div class="delete-confirmation" id="deleteConfirmation">
+    <div class="popup">
+      <h3>Type "DELETE" to confirm</h3>
+      <input type="text" id="deleteInput" placeholder="Type DELETE here">
+      <div>
+        <button onclick="deleteUserData()" id="confirmDeleteBtn">Delete</button>
+        <button class="cancel" onclick="closeDeleteConfirmation()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      const name = localStorage.getItem('userName');
+      const envNo = localStorage.getItem('envNo');
+      const photo = localStorage.getItem('profilePhoto');
+      if (name && envNo && photo) {
+        showUserData(name, envNo, photo);
+      } else {
+        document.getElementById('formPopup').style.display = 'flex';
+      }
+    };
+
+    // Preview the selected image
+    function previewImage(event) {
+      const preview = document.getElementById('previewPhoto');
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Save user data to localStorage
+    function saveUserData() {
+      const name = document.getElementById('userName').value;
+      const envNo = document.getElementById('envNo').value;
+      const photoInput = document.getElementById('profilePhoto');
+      const preview = document.getElementById('previewPhoto').src;
+
+      if (name && envNo) {
+        let photo = preview; // Use preview photo as the stored photo
+        if (photoInput.files[0]) {
+          localStorage.setItem('profilePhoto', photo);
+        }
+        localStorage.setItem('userName', name);
+        localStorage.setItem('envNo', envNo);
+        showUserData(name, envNo, photo);
+      } else {
+        alert('Please fill out all fields!');
+      }
+    }
+
+    // Display user data
+    function showUserData(name, envNo, photo) {
+      document.getElementById('displayName').innerText = ` ${name}`;
+      document.getElementById('displayEnvNo').innerText = `${envNo}`;
+      document.getElementById('displayPhoto').src = photo || '';
+      document.getElementById('userData').style.display = 'block';
+      document.getElementById('formPopup').style.display = 'none';
+    }
+
+    // Allow user to edit data
+    function editUserData() {
+      document.getElementById('formPopup').style.display = 'flex';
+      document.getElementById('userData').style.display = 'none';
+      document.getElementById('userName').value = localStorage.getItem('userName');
+      document.getElementById('envNo').value = localStorage.getItem('envNo');
+      const photo = localStorage.getItem('profilePhoto');
+      const preview = document.getElementById('previewPhoto');
+      preview.src = photo || '';
+      preview.style.display = photo ? 'block' : 'none';
+    }
+
+    // Save screenshot of profile to the user's gallery
+    function saveProfileScreenshot() {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      // Get the profile elements
+      const profileImage = document.getElementById('displayPhoto');
+      const nameText = document.getElementById('displayName').innerText;
+      const envNoText = document.getElementById('displayEnvNo').innerText;
+
+      // Set canvas size
+      canvas.width = 300;
+      canvas.height = 400;
+
+      // Draw the profile picture
+      context.drawImage(profileImage, 100, 20, 100, 100);
+
+      // Add the name and environment number text
+      context.font = '16px Arial';
+      context.fillStyle = 'black';
+      context.fillText(nameText, 40, 150);
+      context.fillText(envNoText, 40, 180);
+
+      // Convert the canvas to a data URL (image)
+      const dataUrl = canvas.toDataURL("image/png");
+
+      // Create a temporary link to trigger the download
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'profile_screenshot.png';
+      link.click();
+
+      // Show success message
+      showSuccessMessage();
+    }
+
+    // Show success message after saving
+    function showSuccessMessage() {
+      const successMessage = document.getElementById('successMessage');
+      successMessage.style.display = 'block';
+      
+      // Hide the success message after 3 seconds
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 3000);
+    }
+
+    // Open the delete confirmation popup
+    function openDeleteConfirmation() {
+      document.getElementById('deleteConfirmation').style.display = 'flex';
+    }
+
+    // Close the delete confirmation popup
+    function closeDeleteConfirmation() {
+      document.getElementById('deleteConfirmation').style.display = 'none';
+    }
+
+    // Delete user data from localStorage and clear the page
+    function deleteUserData() {
+      const deleteInput = document.getElementById('deleteInput').value;
+
+      if (deleteInput === "DELETE") {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('envNo');
+        localStorage.removeItem('profilePhoto');
+
+        // Clear the displayed user data
+        document.getElementById('userData').style.display = 'none';
+
+        // Show the form again
+        document.getElementById('formPopup').style.display = 'flex';
+        closeDeleteConfirmation();
+      } else {
+        alert('Please type "DELETE" to confirm.');
+      }
+    }
+  </script>
+</body>
+</html>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      height: 100vh;
+  
+      flex-direction: column;
+    }
+    .form-popup, .user-data {
+      background: #ffffff00;
+      height: 300px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+    .form-popup {
+      display: none;
+      flex-direction: column;
+      gap: 3px;
+      height: 500px;
+    }
+    .form-popup input, .form-popup button {
+    
+      font-size: 16px;
+    }
+    .form-popup img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+     
+      display: none;
+    }
+    .user-data h2 {
+      margin: 0;
+    }
+    .user-data img {
+      width: 100%; 
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+    .user-data button {
+      margin-top: 10px;
+      margin-right: 5px;
+      padding: 10px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .user-data button:hover {
+      background: #0056b3;
+    }
+    #buttons {
+      display: flex;
+      justify-content: flex-start;
+    }
+    #successMessage {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: green;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      font-size: 16px;
+      z-index: 1000;
+    }
+    .delete-button {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .delete-button:hover {
+      background: darkred;
+    }
+    .delete-confirmation {
+      display: none;
+      background-color: rgba(0, 0, 0, 0.5);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .delete-confirmation .popup {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .delete-confirmation input {
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .delete-confirmation button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .delete-confirmation button.cancel {
+      background-color: gray;
+    }
